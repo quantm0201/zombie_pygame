@@ -7,25 +7,58 @@ class Zombie(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
+        self.deadSprites = []
+        for i in range(1, Z_DIE_ANIM_FRAME + 1):
+            image = pygame.image.load('res/Zombie/Zombie1/animation/Dead' + str(i) + '.png')
+            rect = image.get_rect()
+            self.deadSprites.append(pygame.transform.scale(image, (rect.width // 3, rect.height // 3)))  
+
         self.spr1 = pygame.image.load('res/Zombie/Zombie1/animation/Walk1.png').convert()
-        self.spr1.set_colorkey(WHITE)
+        self.spr1.set_colorkey(BLACK)
         self.rec1 = self.spr1.get_rect()
         self.spr2 = pygame.image.load('res/Zombie/Zombie1/animation/Dead7.png').convert()
-        self.spr2.set_colorkey(WHITE)
+        # self.spr2.set_colorkey(WHITE)
         self.rec2 = self.spr2.get_rect()
         self.image = pygame.transform.scale(self.spr1, (self.rec1.width//3, self.rec1.height//3))
         self.rect = self.image.get_rect()
         self.rect.center = (Z_WIDTH//2, Z_HEIGHT//2)
 
+        self.state = Z_NOT_SHOW_STATE
+        self.timeRemain = 0
+
     def die(self):
-        self.image = pygame.transform.scale(self.spr2, (self.rec2.width//3, self.rec2.height//3))
+        self.state = Z_DIE_STATE
+        self.timeRemain = Z_TIME_DIE * FPS
+        # self.image = pygame.transform.scale(self.spr2, (self.rec2.width//3, self.rec2.height//3))
         self.rect = self.image.get_rect()
         self.rect.center = (Z_WIDTH//2, Z_HEIGHT*3/4)
 
     def respawn(self):
+        self.state = Z_SHOW_STATE
+        self.timeRemain = Z_TIME_APPEAR * FPS
         self.image = pygame.transform.scale(self.spr1, (self.rec1.width//3, self.rec1.height//3))
         self.rect = self.image.get_rect()
         self.rect.center = (Z_WIDTH//2, Z_HEIGHT//2)
 
+    def runDeadAnimation(self):
+        timePerFrame = Z_TIME_DIE * FPS / Z_DIE_ANIM_FRAME
+        animState = Z_DIE_ANIM_FRAME - self.timeRemain // timePerFrame
+        self.image = self.deadSprites[int(animState - 1)]
+
     def update(self):
-        self.rect.y -= 0
+
+        if (self.timeRemain > 0):
+            self.timeRemain -= 1
+
+        if (self.timeRemain == 0):
+            self.state = Z_NOT_SHOW_STATE
+
+        if (self.state == Z_SHOW_STATE):
+            return
+        elif (self.state == Z_DIE_STATE):
+            self.runDeadAnimation()
+        else:       # Z_NOT_SHOW_STATE
+            return
+
+
+

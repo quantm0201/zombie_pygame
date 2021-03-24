@@ -6,6 +6,15 @@ BLACK = (0, 0, 0)
 
 FPS = 60
 
+# Zombie
 Z_WIDTH = 200
 Z_HEIGHT = 200
 Z_TIME_APPEAR = 2
+Z_TIME_DIE = 1
+
+Z_NOT_SHOW_STATE = 0
+Z_SHOW_STATE = 1
+Z_DIE_STATE = 2
+
+#Animation
+Z_DIE_ANIM_FRAME = 8

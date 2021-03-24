@@ -36,23 +36,18 @@ class Slot(pygame.sprite.Sprite):
         return switcher.get(self.id, (0, 0))
 
     def checkHit(self, pos):
-        if self.timeRemain > 0:
+        if (self.zombie.timeRemain > 0 and self.zombie.state == Z_SHOW_STATE):
             return self.rect.collidepoint(pos)
         return False
 
     def killZombie(self):
         self.zombie.die()
-        self.image.fill(GREEN)
-        self.image.blit(self.zombie.image, self.zombie.rect)
 
     def update(self):
-        if (self.timeRemain > 0):
-            self.timeRemain -= 1
-            return
-        if random.randint(0, 6*FPS) == FPS:
-            self.zombie.respawn()
+        self.image.fill(GREEN)
+        if (self.zombie.state != Z_NOT_SHOW_STATE):
             self.image.blit(self.zombie.image, self.zombie.rect)
-            self.timeRemain = Z_TIME_APPEAR*FPS
-        else:
-            self.image.fill(GREEN)
-            self.isShow = False
+
+        if (self.zombie.state == Z_NOT_SHOW_STATE):
+            if random.randint(0, 6*FPS) == FPS:
+                self.zombie.respawn()

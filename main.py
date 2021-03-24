@@ -35,6 +35,7 @@ while True:
             pos = pygame.mouse.get_pos()
             for spr in slot_group.sprites():
                 if spr.checkHit(pos):
+                    print("hit")
                     point.updatePoint(1)
                     spr.killZombie()
             
