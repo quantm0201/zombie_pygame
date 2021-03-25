@@ -19,7 +19,7 @@ class Zombie(pygame.sprite.Sprite):
         self.image = self.spr1
         self.rec1 = self.spr1.get_rect()
         self.rect = Rect(self.getRandomPos(), (self.rec1.width // 3, self.rec1.height // 3))
-        
+        self.bottomPoint = self.rect.bottom
 
         self.state = Z_NOT_SHOW_STATE
         self.timeRemain = 0
@@ -38,6 +38,7 @@ class Zombie(pygame.sprite.Sprite):
         self.image.set_alpha(255)
         # self.rect = self.image.get_rect()
         self.rect = Rect(self.getRandomPos(), (self.rec1.width // 3, self.rec1.height // 3))
+        self.bottomPoint = self.rect.bottom
 
         # self.rect.center = (Z_WIDTH//2, Z_HEIGHT//2)
 
@@ -55,6 +56,12 @@ class Zombie(pygame.sprite.Sprite):
         timePerFrame = Z_TIME_DIE * FPS / Z_DIE_ANIM_FRAME
         animState = Z_DIE_ANIM_FRAME - self.timeRemain // timePerFrame
         self.image = self.deadSprites[int(animState - 1)]
+
+        rectImage = self.image.get_rect()
+        posY = self.bottomPoint - rectImage.height
+        self.rect = Rect(self.rect.left, posY, rectImage.width, rectImage.height)
+
+
 
     def update(self):
         if (self.state == Z_NOT_SHOW_STATE):
