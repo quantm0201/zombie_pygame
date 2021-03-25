@@ -5,6 +5,7 @@ from Config import *
 from Slot import *
 from Point import *
 from Mallet import *
+from Explosion import *
 
 def sortLayer(sprites):
     for zombie in sprites:
@@ -42,6 +43,10 @@ mallet_group = pygame.sprite.LayeredUpdates()
 mallet = Mallet()
 mallet_group.add(mallet)
 
+eps_group = pygame.sprite.LayeredUpdates()
+eps = Explosion()
+eps_group.add(eps)
+
 point = Point()
 
 loseNotice = pygame.font.SysFont('consolas', 30).render('Game Over!', True, WHITE)
@@ -72,6 +77,7 @@ while True:
                         print("hit")
                         hit = True
                         point.updatePoint(1)
+                        eps_group.sprites()[0].show()
                         spr.die()
                 if hit == False:
                     point.updatePoint(0)
@@ -85,7 +91,9 @@ while True:
         sortLayer(zombie_group)
             
         mallet_group.update()
+        eps_group.update()
         zombie_group.draw(backgroundMain)
+        eps_group.draw(backgroundMain)
         mallet_group.draw(backgroundMain)
         SCREEN.blit(backgroundMain, (0, 0))
         

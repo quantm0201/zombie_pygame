@@ -22,9 +22,17 @@ Z_DIE_STATE = 2
 
 #Animation
 Z_DIE_ANIM_FRAME = 8
+EPS_ANIM_FRAME = 14
+
+# Explosion
+
+EPS_TIME_APPEAR = 0.5
+SHOW_STATE = 0
+NOT_SHOW_STATE = 1
 
 # Attack
 ATK_COOL_DOWN = 0.3
 MAX_ANGLE = 20
+
 #Game Point
 DELTA_P_LOSE = 10
