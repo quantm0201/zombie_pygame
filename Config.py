@@ -1,3 +1,7 @@
+import pygame, sys
+from pygame.locals import *
+import random
+
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
@@ -36,3 +40,16 @@ MAX_ANGLE = 20
 
 #Game Point
 DELTA_P_LOSE = 10
+
+Z_DIE_ANIM = [[[], []], [[], []], [[], []]]
+
+def loadDeadResource():
+    for i in range(1, 4):
+        for j in range(2):
+            for k in range(1, Z_DIE_ANIM_FRAME + 1):
+                image = pygame.image.load('res/Zombie/Zombie' + str(i) + '/animation/Dead' + str(k) + '.png')
+                rect = image.get_rect()
+                image = pygame.transform.scale(image, (rect.width // 3, rect.height // 3))
+                if (j == 1):
+                    image = pygame.transform.flip(image, True, False)
+                Z_DIE_ANIM[i - 1][j].append(image)

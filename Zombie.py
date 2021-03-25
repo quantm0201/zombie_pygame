@@ -8,18 +8,22 @@ class Zombie(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.id = id
-        self.deadSprites = []
-        for i in range(1, Z_DIE_ANIM_FRAME + 1):
-            image = pygame.image.load('res/Zombie/Zombie1/animation/Dead' + str(i) + '.png')
-            rect = image.get_rect()
-            self.deadSprites.append(pygame.transform.scale(image, (rect.width // 3, rect.height // 3)))  
+        
+        typeZombie = random.randint(1, 3)
+        self.flip = random.randint(0, 1)
+        self.deadSprites = Z_DIE_ANIM[typeZombie - 1][self.flip]
 
-        self.spr1 = pygame.image.load('res/Zombie/Zombie1/animation/Walk1.png').convert()
+        typePosture = random.randint(1, 4)
+        self.spr1 = pygame.image.load('res/Zombie/Zombie' + str(typeZombie) + '/animation/Stand' + str(typePosture) + '.png').convert()
+        if (self.flip == 1):
+            self.spr1 = pygame.transform.flip(self.spr1, True, False)
+
         self.spr1.set_colorkey(BLACK)
         self.image = self.spr1
         self.rec1 = self.spr1.get_rect()
         self.rect = Rect(self.getRandomPos(), (self.rec1.width // 3, self.rec1.height // 3))
         self.bottomPoint = self.rect.bottom
+        self.rightPoint = self.rect.right
 
         self.state = Z_NOT_SHOW_STATE
         self.timeRemain = 0
@@ -39,6 +43,7 @@ class Zombie(pygame.sprite.Sprite):
         # self.rect = self.image.get_rect()
         self.rect = Rect(self.getRandomPos(), (self.rec1.width // 3, self.rec1.height // 3))
         self.bottomPoint = self.rect.bottom
+        self.rightPoint = self.rect.right
 
         # self.rect.center = (Z_WIDTH//2, Z_HEIGHT//2)
 
@@ -58,8 +63,11 @@ class Zombie(pygame.sprite.Sprite):
         self.image = self.deadSprites[int(animState - 1)]
 
         rectImage = self.image.get_rect()
+        posX = self.rect.left
+        if (self.flip):
+            posX = self.rightPoint - rectImage.width
         posY = self.bottomPoint - rectImage.height
-        self.rect = Rect(self.rect.left, posY, rectImage.width, rectImage.height)
+        self.rect = Rect(posX, posY, rectImage.width, rectImage.height)
 
 
 

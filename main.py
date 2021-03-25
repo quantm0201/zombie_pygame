@@ -17,6 +17,7 @@ def sortLayer(sprites):
 
 pygame.init()
 
+loadDeadResource()
 pygame.mixer.music.load('res/sound/bgMusic.mp3')
 pygame.mixer.music.play(-1)
 
