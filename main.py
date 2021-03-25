@@ -16,6 +16,18 @@ def sortLayer(sprites):
 
 pygame.init()
 
+pygame.mixer.music.load('res/sound/bgMusic.mp3')
+pygame.mixer.music.play(-1)
+
+hitSound = pygame.mixer.Sound('res/sound/hit1.wav')
+deadSound = []
+for x in range(4):
+    ds = pygame.mixer.Sound('res/sound/dead' + str(x+1) + ".wav")
+    deadSound.append(ds)
+gOverSound = pygame.mixer.Sound('res/sound/gameOver.wav')
+replaySound = pygame.mixer.Sound('res/sound/horrorLaugh.mp3')
+replaySound.play()
+
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("BEAT THE ZOMBIE")
@@ -48,8 +60,7 @@ loseNotice = pygame.font.SysFont('consolas', 30).render('Game Over!', True, WHIT
 loseNoticeRect = loseNotice.get_rect()
 loseNoticeRect.center = (WIDTH//2, HEIGHT//2)
 loseBackground = pygame.Surface((WIDTH, HEIGHT), SRCALPHA)
-isLose = False
-isNotice = False
+isEndGame = False
 
 while True:
 
@@ -58,11 +69,12 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONUP:
-            if isNotice:
+            if isEndGame:
                 loseBackground.fill((0, 0, 0, 0))
-                isLose = False
-                isNotice = False
+                isEndGame = False
                 point.reset()
+                replaySound.play()
+                pygame.mixer.music.play(-1)
             else:
                 pos = pygame.mouse.get_pos()
                 mallet_group.sprites()[0].attack()
@@ -73,12 +85,21 @@ while True:
                         hit = True
                         point.updatePoint(1)
                         spr.die()
+                        hitSound.play()
+                        deadSound[random.randint(0, 3)].play()
                 if hit == False:
                     point.updatePoint(0)
                 if point.totalBeat - point.point >= DELTA_P_LOSE:
-                    isLose = True
+                    SCREEN.blit(backgroundMain, (0, 0))
+                    point.draw(SCREEN)
+                    loseBackground.fill((0, 0, 0, 50))
+                    loseBackground.blit(loseNotice, loseNoticeRect)
+                    SCREEN.blit(loseBackground, (0, 0))
+                    isEndGame = True
+                    gOverSound.play()
+                    pygame.mixer.music.pause()
     
-    if isNotice == False:
+    if isEndGame == False:
     
         backgroundMain = pygame.transform.scale(background, (background.get_rect().width // 4, background.get_rect().height // 4))
         zombie_group.update()
@@ -88,14 +109,8 @@ while True:
         zombie_group.draw(backgroundMain)
         mallet_group.draw(backgroundMain)
         SCREEN.blit(backgroundMain, (0, 0))
-        
-        point.draw(SCREEN)
 
-        if isLose:
-            loseBackground.fill((0, 0, 0, 50))
-            loseBackground.blit(loseNotice, loseNoticeRect)
-            SCREEN.blit(loseBackground, (0, 0))
-            isNotice = True
+        point.draw(SCREEN)
         
     pygame.display.update()
     clock.tick(FPS)
