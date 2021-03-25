@@ -12,6 +12,17 @@ def sortLayer(sprites):
         posY = zombie.rect.top
         sprites.change_layer(zombie, posY)
     
+def switchBackGroundId():
+    i = 0
+    if bgId == 0:
+        i = random.randint(1, NUM_BG - 1)
+    elif bgId == NUM_BG - 1:
+        i = random.randint(0, NUM_BG - 2)
+    elif random.randint(0, 1) == 1:
+        i = random.randint(0, bgId - 1)
+    else:
+        i = random.randint(bgId + 1, NUM_BG - 1)
+    return i
 
 
 
@@ -21,10 +32,10 @@ pygame.mixer.music.load('res/sound/bgMusic.mp3')
 pygame.mixer.music.play(-1)
 
 hitSound = pygame.mixer.Sound('res/sound/hit1.wav')
-deadSound = []
-for x in range(4):
+deadSounds = []
+for x in range(NUM_DEAD_SOUND):
     ds = pygame.mixer.Sound('res/sound/dead' + str(x+1) + ".wav")
-    deadSound.append(ds)
+    deadSounds.append(ds)
 gOverSound = pygame.mixer.Sound('res/sound/gameOver.wav')
 replaySound = pygame.mixer.Sound('res/sound/horrorLaugh.mp3')
 replaySound.play()
@@ -36,8 +47,12 @@ pygame.display.set_caption("BEAT THE ZOMBIE")
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(False)
 
-
-background = pygame.image.load("res/Object/background_1.png")
+bgs = []
+for x in range(NUM_BG):
+    bg = pygame.image.load("res/Object/background_" + str(x+1) + ".png")
+    bgs.append(bg)
+bgId = random.randint(0, NUM_BG - 1)
+background = bgs[bgId]
 
 # mainGroup = pygame.sprite.Group()
 # mainGroup.add(background)
@@ -80,6 +95,8 @@ while True:
                 point.reset()
                 replaySound.play()
                 pygame.mixer.music.play(-1)
+                bgId = switchBackGroundId()
+                background = bgs[bgId]
             else:
                 pos = pygame.mouse.get_pos()
                 mallet_group.sprites()[0].attack()
@@ -92,7 +109,7 @@ while True:
                         eps_group.sprites()[0].show()
                         spr.die()
                         hitSound.play()
-                        deadSound[random.randint(0, 3)].play()
+                        deadSounds[random.randint(0, NUM_DEAD_SOUND - 1)].play()
                 if hit == False:
                     point.updatePoint(0)
                 if point.totalBeat - point.point >= DELTA_P_LOSE:
