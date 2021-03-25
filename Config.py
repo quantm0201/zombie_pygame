@@ -38,7 +38,7 @@ NOT_SHOW_STATE = 1
 ATK_COOL_DOWN = 0.3
 MAX_ANGLE = 20
 
-#Game Point
+#Game
 DELTA_P_LOSE = 10
 
 Z_DIE_ANIM = [[[], []], [[], []], [[], []]]
@@ -53,3 +53,5 @@ def loadDeadResource():
                 if (j == 1):
                     image = pygame.transform.flip(image, True, False)
                 Z_DIE_ANIM[i - 1][j].append(image)
+NUM_BG = 4
+NUM_DEAD_SOUND = 4
