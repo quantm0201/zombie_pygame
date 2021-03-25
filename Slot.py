@@ -16,7 +16,6 @@ class Slot(pygame.sprite.Sprite):
         x = self.getPos()[0]
         y = self.getPos()[1]
         self.rect.center = (x + self.rect.width/2, y + self.rect.height/2)
-
         self.zombie = Zombie()
 
         self.timeRemain = 0
