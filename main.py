@@ -12,7 +12,7 @@ def sortLayer(sprites):
 
 pygame.init()
 
-SCREEN = pygame.display.set_mode((960, 540))
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption("BEAT THE ZOMBIE")
 
@@ -35,30 +35,57 @@ for x in range(Z_MAX_NUMBER):
 
 point = Point()
 
+loseNotice = pygame.font.SysFont('consolas', 30).render('Game Over!', True, WHITE)
+loseNoticeRect = loseNotice.get_rect()
+loseNoticeRect.center = (WIDTH//2, HEIGHT//2)
+loseBackground = pygame.Surface((WIDTH, HEIGHT), SRCALPHA)
+isLose = False
+isNotice = False
+
 while True:
+
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
         if event.type == MOUSEBUTTONUP:
-            pos = pygame.mouse.get_pos()
-            for spr in zombie_group.sprites():
-                if spr.checkHit(pos):
-                    print("hit")
-                    point.updatePoint(1)
-                    spr.die()
+            if isNotice:
+                loseBackground.fill((0, 0, 0, 0))
+                isLose = False
+                isNotice = False
+                point.reset()
+            else:
+                pos = pygame.mouse.get_pos()
+                hit = False
+                for spr in zombie_group.sprites():
+                    if spr.checkHit(pos):
+                        print("hit")
+                        hit = True
+                        point.updatePoint(1)
+                        spr.die()
+                if hit == False:
+                    point.updatePoint(0)
+                if point.totalBeat - point.point >= DELTA_P_LOSE:
+                    isLose = True
+
+    if isNotice == False:
+    
+        backgroundMain = pygame.transform.scale(background, (background.get_rect().width // 4, background.get_rect().height // 4))
+        zombie_group.update()
+        sortLayer(zombie_group)
             
-    
-    backgroundMain = pygame.transform.scale(background, (background.get_rect().width // 4, background.get_rect().height // 4))
-    zombie_group.update()
-    sortLayer(zombie_group)
+        zombie_group.draw(backgroundMain)
+        SCREEN.blit(backgroundMain, (0, 0))
         
-    zombie_group.draw(backgroundMain)
-    SCREEN.blit(backgroundMain, (0, 0))
-    
-    point.draw(SCREEN)
+        point.draw(SCREEN)
+
+        if isLose:
+            loseBackground.fill((0, 0, 0, 50))
+            loseBackground.blit(loseNotice, loseNoticeRect)
+            SCREEN.blit(loseBackground, (0, 0))
+            isNotice = True
+        
     pygame.display.update()
-        
     clock.tick(FPS)
 
 
