@@ -19,3 +19,7 @@ Z_DIE_STATE = 2
 
 #Animation
 Z_DIE_ANIM_FRAME = 8
+
+# Attack
+ATK_COOL_DOWN = 0.3
+MAX_ANGLE = 20
