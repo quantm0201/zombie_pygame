@@ -4,6 +4,9 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
+WIDTH = 960
+HEIGHT = 540
+
 FPS = 60
 
 # Zombie
@@ -23,3 +26,5 @@ Z_DIE_ANIM_FRAME = 8
 # Attack
 ATK_COOL_DOWN = 0.3
 MAX_ANGLE = 20
+#Game Point
+DELTA_P_LOSE = 10
